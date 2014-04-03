@@ -82,6 +82,14 @@ function servidor_matar {
 	kill $(cat /tmp/ciboulette)
 }
 
+function avatar {
+	ARCHIVO=`cat /dev/stdin`
+	convert "$ARCHIVO" -resize 16x16 ~/.ciboulette/favicon.ico
+	convert "$ARCHIVO" -resize 110x110 -bordercolor none -border 9 ~/.ciboulette/avatar.png
+	qrencode -m 0 -s1 "$(cat ~/.ciboulette/hostname)" -o ~/.ciboulette/qr.png
+	composite -gravity South ~/.ciboulette/qr.png  ~/.ciboulette/avatar.png  ~/.ciboulette/avatar.png
+}
+
 function nodo_agregar {
 	URL=`cat /dev/stdin`
 	torify rawdog -d ~/.ciboulette/novedades/ -a "$URL" 2> /dev/null
@@ -232,9 +240,11 @@ case $MENU in
 			xdg-open "http://127.0.0.1:4232"
 		;;
 		1 )
-			ARCHIVO=$(archivo "Imagen del perfil")
+			ARCHIVO="$(archivo "Imagen del perfil")"
 			convert "$ARCHIVO" -resize 16x16 ~/.ciboulette/favicon.ico
-			convert "$ARCHIVO" -resize 128x128 ~/.ciboulette/avatar.png
+			convert "$ARCHIVO" -resize 100x100 -bordercolor none -border 14 ~/.ciboulette/avatar.png
+			qrencode -m 0 -s1 "$(cat ~/.ciboulette/hostname)" -o ~/.ciboulette/qr.png
+			composite -gravity SouthEast ~/.ciboulette/qr.png  ~/.ciboulette/avatar.png  ~/.ciboulette/avatar.png
 		;;
 		2)
 			xdg-open ~/.ciboulette/config
