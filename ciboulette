@@ -183,11 +183,18 @@ while getopts a:b:n:skdlhiuw OPCION; do
 		# Crea el directorio local y temas
 
 		mkdir -p ~/.$NOMBRE/md 2> /dev/null
-		cp -r config ~/.$NOMBRE/
-		cp -r favicon.ico ~/.$NOMBRE/
+		cp  config ~/.$NOMBRE/
+		cp  favicon.ico ~/.$NOMBRE/
 		FEED="$(cat ~/.$NOMBRE/novedades/config | grep "^feed ")"
 		cp -r novedades ~/.$NOMBRE/
+		# recupera los viejos feed
 		echo "$FEED" >> ~/.$NOMBRE/novedades/config
+
+		# comprueba si esta instalando o actualizando
+		if [ ! "$(cat ~/.ciboulette/hostname)" ]; then
+			# agrega tu nombre de usuario por defecto
+			echo "blog_title = `whoami`" >> ~/.$NOMBRE/config
+		fi
 
 		echo "output = $HOME/.$NOMBRE" >> ~/.$NOMBRE/config
 		echo "input = $HOME/.$NOMBRE/md" >> ~/.$NOMBRE/config
